@@ -1,0 +1,17 @@
+.block {
+    /* background-color: gray; */
+    width: 100%;
+}
+
+.side {
+    height: calc(100vh - 130px);
+}
+
+.main {
+    height: calc(100vh - 240px);
+}
+
+.footer {
+    height: 100px;
+    margin-top: 10px;
+}
