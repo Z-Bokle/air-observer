@@ -1,5 +1,5 @@
 import { Button, Card, Col, DatePicker, Row, Slider } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import dayjs from 'dayjs'
 import { PauseOutlined, PlaySquareOutlined } from '@ant-design/icons'
@@ -24,50 +24,51 @@ const marks: SliderMarks = {
 
 
 
-const PollutionTimeline: React.FC<PollutionTimelineProps> = (props) => {
+const PollutionTimeline =
+  forwardRef<HTMLDivElement, PollutionTimelineProps>((props, ref) => {
 
-  const [play, setPlay] = useState(false)
+    const [play, setPlay] = useState(false)
 
-  useEffect(() => {
-    const player = play ? setTimeout(() => { props.year < 1543622400000 ? props.onChangeYear(props.year + 2678400000) : props.onChangeYear(1356998400000) }, 200) : null
-    return () => {
-      if (player !== null) clearTimeout(player)
-    }
-  }, [play, props.year])
+    useEffect(() => {
+      const player = play ? setTimeout(() => { props.year < 1543622400000 ? props.onChangeYear(props.year + 2678400000) : props.onChangeYear(1356998400000) }, 200) : null
+      return () => {
+        if (player !== null) clearTimeout(player)
+      }
+    }, [play, props.year])
 
-  const extra = <Button icon={play ? <PauseOutlined /> : <PlaySquareOutlined />} onClick={() => setPlay(!play)} >{play ? '暂停' : '播放'}</Button>
+    const extra = <Button icon={play ? <PauseOutlined /> : <PlaySquareOutlined />} onClick={() => setPlay(!play)} >{play ? '暂停' : '播放'}</Button>
 
-  return (
-    <Card title="时间选择" size='small' extra={extra}>
-      <Row style={{ textAlign: 'center' }}>
-        <Col span={21}>
-          <Slider
-            min={1356998400000}
-            max={1543622400000}
-            defaultValue={1356998400000}
-            step={2678400000}
-            value={props.year}
-            marks={marks}
-            tooltip={{ formatter: formatter }}
-            included={false}
-            onChange={(value) => props.onChangeYear(value)}
-            style={{ marginLeft: 15 }}
-          />
-        </Col>
-        <Col span={3}>
-          <DatePicker
-            picker='month'
-            locale={locale}
-            allowClear={false}
-            value={dayjs(props.year)}
-            disabledDate={disabledDate}
-            onChange={(date) => date ? props.onChangeYear(date.valueOf()) : null}
-          />
-        </Col>
-      </Row>
-    </Card>
+    return (
+      <Card title="时间选择" size='small' extra={extra} ref={ref}>
+        <Row style={{ textAlign: 'center' }}>
+          <Col span={21}>
+            <Slider
+              min={1356998400000}
+              max={1543622400000}
+              defaultValue={1356998400000}
+              step={2678400000}
+              value={props.year}
+              marks={marks}
+              tooltip={{ formatter: formatter }}
+              included={false}
+              onChange={(value) => props.onChangeYear(value)}
+              style={{ marginLeft: 15 }}
+            />
+          </Col>
+          <Col span={3}>
+            <DatePicker
+              picker='month'
+              locale={locale}
+              allowClear={false}
+              value={dayjs(props.year)}
+              disabledDate={disabledDate}
+              onChange={(date) => date ? props.onChangeYear(date.valueOf()) : null}
+            />
+          </Col>
+        </Row>
+      </Card>
 
-  )
-}
+    )
+  })
 
 export default PollutionTimeline

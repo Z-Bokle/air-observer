@@ -1,3 +1,4 @@
+import { Ref } from "react"
 import { Region } from "../type"
 
 type CodeRecord = {
@@ -13,6 +14,7 @@ type CodeRecord = {
 declare interface RegionSelectCardProps {
   region: Region
   onChangeRegion: (region: Region) => void
+  // ref?: Ref
 }
 
 export { CodeRecord, RegionSelectCardProps }

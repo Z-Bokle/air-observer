@@ -13,7 +13,7 @@ const router = createBrowserRouter([
   {
     path: '/', element: <Main />, errorElement: <Error />, children: [
       { path: '', element: <Default />, handle: { title: 'Air Observer' } },
-      { path: 'spacetime', element: <Spacetime mode='region' />, handle: { title: '时空态势分析' } },
+      { path: 'spacetime', element: <Spacetime />, handle: { title: '时空态势分析' } },
       { path: 'event', element: <Events />, handle: { title: '特殊气象事件分析' } },
       { path: 'pollution', element: <Pollution />, handle: { title: '污染传播分析' } },
     ]

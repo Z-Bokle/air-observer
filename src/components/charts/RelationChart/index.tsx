@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Chart,
   Area,
@@ -13,6 +13,9 @@ import {
 } from 'bizcharts'
 
 import type { ChartProps } from '../type'
+import { Card } from 'antd'
+import { useDrag } from 'react-dnd'
+import { Charts as ChartsSymbol } from '../../../symbols'
 
 const data = [
   [0, 0, 10],
@@ -83,11 +86,31 @@ const data = [
 
 export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) => {
 
+  const [{ isDragging }, dragRef] = useDrag({
+    item: { type: 'Relation', title: props.title },
+    type: ChartsSymbol,
+    end: (draggedItem, monitor) => {
+      const result = monitor.getDropResult()
+      if (draggedItem && result) {
+        props.onDrop?.((result as { index: number }).index, (<RelationChart
+          height={300}
+          title='111'
+        />))
+      }
+    },
+    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+  })
+
+  useEffect(() => {
+    props.onDragging?.(isDragging)
+  }, [isDragging])
+
+
   const source = data.map((arr) => {
     return {
-      name: arr[0],
-      day: arr[1],
-      sales: arr[2],
+      namex: arr[0],
+      namey: arr[1],
+      value: arr[2],
     };
   })
 
@@ -100,69 +123,74 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
       type: 'cat',
       values: ['AQI', 'PM2.5', 'PM10', 'NO2', 'O3', 'TEMP', 'RH', 'PSFC'],
     },
-    sales: {
+    value: {
       nice: true,
     }
   }
 
   return (
-    <Chart
-      scale={scale}
-      height={props.height}
-      data={source}
-      autoFit
-      pure
-    >
-
-      <Axis
-        name={'namex'}
-        tickLine={null}
-        grid={{
-          alignTick: false,
-          line: {
-            style: {
-              lineWidth: 1,
-              lineDash: null,
-              stroke: '#f0f0f0',
-            },
-          },
-        }}
-      />
-      <Axis
-        name={'namey'}
-        title={null}
-        grid={{
-          alignTick: false,
-          line: {
-            style: {
-              lineWidth: 1,
-              lineDash: null,
-              stroke: '#f0f0f0',
-            },
-          },
-        }}
-      />
-      <Tooltip shared showMarkers={false} />
-      <Polygon
-        position={'namex*namey'}
-        color={['sales', '#BAE7FF-#1890FF-#0050B3']}
-        label={['sales', {
-          offset: -2,
-          style: {
-            fill: '#fff',
-            shadowBlur: 2,
-            shadowColor: 'rgba(0, 0, 0, .45)',
-          },
-        }]}
-        style={{
-          lineWidth: 1,
-          stroke: '#fff',
-        }}
+    <Card className={props.className + ' w-[28vw] h-[38vh]'} title={props.title} ref={dragRef}>
+      <Chart
+        scale={scale}
+        height={props.height}
+        data={source}
+        autoFit
+        pure
       >
 
-      </Polygon>
-      <Interaction type={'element-active'} />
-    </Chart>
+        <Axis
+          name={'namex'}
+          tickLine={null}
+          grid={{
+            alignTick: false,
+            line: {
+              style: {
+                lineWidth: 1,
+                lineDash: null,
+                stroke: '#f0f0f0',
+              },
+            },
+          }}
+        />
+        <Axis
+          name={'namey'}
+          title={null}
+          grid={{
+            alignTick: false,
+            line: {
+              style: {
+                lineWidth: 1,
+                lineDash: null,
+                stroke: '#f0f0f0',
+              },
+            },
+          }}
+        />
+        <Tooltip shared showMarkers={false} />
+        <Polygon
+          position={'namex*namey'}
+          color={['value', '#BAE7FF-#1890FF-#0050B3']}
+          label={['value', {
+            offset: -2,
+            style: {
+              fill: '#fff',
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)',
+            },
+          }]}
+          style={{
+            lineWidth: 1,
+            stroke: '#fff',
+          }}
+        >
+
+        </Polygon>
+        <Interaction type='element-active' />
+        <Interaction type='element-highlight-by-color' />
+      </Chart>
+
+    </Card>
+
   )
 }
 
