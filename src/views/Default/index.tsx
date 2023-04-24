@@ -1,7 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function Default() {
-  return (
-    <div>Default</div>
-  )
+  const navigate = useNavigate()
+  navigate('/spacetime')
+  return null
 }

@@ -13,7 +13,7 @@ import {
 } from 'bizcharts'
 
 import type { ChartProps } from '../type'
-import { Card } from 'antd'
+import { Button, Card } from 'antd'
 import { useDrag } from 'react-dnd'
 import { Charts as ChartsSymbol } from '../../../symbols'
 
@@ -92,17 +92,20 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
     end: (draggedItem, monitor) => {
       const result = monitor.getDropResult()
       if (draggedItem && result) {
-        props.onDrop?.((result as { index: number }).index, (<RelationChart
-          height={300}
-          title='111'
-        />))
+        props.onDrop?.((result as { index: number }).index, {
+          key: (result as { index: number }).index,
+          chartType: 'Relation',
+          disableDrag: true,
+          height: 300,
+          title: "关系图(测试中)",
+        })
       }
     },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   })
 
   useEffect(() => {
-    props.onDragging?.(isDragging)
+    props.onDragging?.(isDragging && !(props.disableDrag))
   }, [isDragging])
 
 
@@ -111,7 +114,7 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
       namex: arr[0],
       namey: arr[1],
       value: arr[2],
-    };
+    }
   })
 
   const scale = {
@@ -129,12 +132,16 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
   }
 
   return (
-    <Card className={props.className + ' w-[28vw] h-[38vh]'} title={props.title} ref={dragRef}>
+    <Card
+      className={props.className + ' w-[28vw] shrink-0'}
+      title={props.title} ref={(!props.disableDrag) ? dragRef : null}
+      extra={props.showDelButton && <Button onClick={() => props.onDel?.()}>删除</Button>}>
       <Chart
         scale={scale}
         height={props.height}
         data={source}
         autoFit
+        placeholder
         pure
       >
 

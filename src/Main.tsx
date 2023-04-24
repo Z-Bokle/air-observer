@@ -27,7 +27,7 @@ function getItem(
 const items: MenuItem[] = [
   getItem('时空态势分析', 'spacetime', <StockOutlined />),
   getItem('特殊气象事件分析', 'event', <HeatMapOutlined />),
-  getItem('污染传播分析', 'pollution', <PieChartOutlined />)
+  // getItem('污染传播分析', 'pollution', <PieChartOutlined />)
 ]
 
 export default function Main() {

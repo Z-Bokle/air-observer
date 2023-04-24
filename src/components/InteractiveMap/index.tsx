@@ -110,7 +110,7 @@ const InteractiveMap =
 
     return (
       <div ref={ref}>
-        <LarkMap mapType='Gaode' mapOptions={mapOptions} style={{ height: '30vh' }}> {/* LarkMap不写样式指定宽度会报错！！！！！ */}
+        <LarkMap mapType='Gaode' mapOptions={mapOptions} style={Object.assign({ height: '30vh' }, props.style)}> {/* LarkMap不写样式指定高度会报错！！！！！ */}
           <ScaleControl /> {/* 需要关闭StrictMode，否则地图样式、控制按钮等都会被渲染两次导致出错 */}
           <ZoomControl />
           <PolygonLayer source={source} {...polygonLayerOption} onClick={handleClick} /*onContextMenu={handleRightClick}*/ />

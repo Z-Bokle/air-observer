@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Row, Slider } from 'antd'
+import { Button, Card, Col, DatePicker, Input, Row, Slider } from 'antd'
 import React, { forwardRef, useEffect, useState } from 'react'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import dayjs from 'dayjs'
@@ -23,21 +23,25 @@ const marks: SliderMarks = {
 }
 
 
-
 const PollutionTimeline =
   forwardRef<HTMLDivElement, PollutionTimelineProps>((props, ref) => {
 
     const [play, setPlay] = useState(false)
+    const [speed, setSpeed] = useState(2800)
 
     useEffect(() => {
-      const player = play ? setTimeout(() => { props.year < 1543622400000 ? props.onChangeYear(props.year + 2678400000) : props.onChangeYear(1356998400000) }, 200) : null
+      const player = play ? setTimeout(() => { props.time < 1543622400000 ? props.onChangeTime(props.time + 2678400000) : props.onChangeTime(1356998400000) }, speed) : null
       return () => {
         if (player !== null) clearTimeout(player)
       }
-    }, [play, props.year])
+    }, [play, props.time])
 
-    const extra = <Button icon={play ? <PauseOutlined /> : <PlaySquareOutlined />} onClick={() => setPlay(!play)} >{play ? '暂停' : '播放'}</Button>
-
+    const extra = 
+    <div className='flex'>
+      <Input className='mx-2 w-52' disabled={play} value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))} prefix='播放速度' suffix='毫秒/次' />
+      <Button icon={play ? <PauseOutlined /> : <PlaySquareOutlined />} onClick={() => setPlay(!play)} >{play ? '暂停' : '播放'}</Button>
+    </div>
+    
     return (
       <Card title="时间选择" size='small' extra={extra} ref={ref}>
         <Row style={{ textAlign: 'center' }}>
@@ -47,11 +51,11 @@ const PollutionTimeline =
               max={1543622400000}
               defaultValue={1356998400000}
               step={2678400000}
-              value={props.year}
+              value={props.time}
               marks={marks}
               tooltip={{ formatter: formatter }}
               included={false}
-              onChange={(value) => props.onChangeYear(value)}
+              onChange={(value) => props.onChangeTime(value)}
               style={{ marginLeft: 15 }}
             />
           </Col>
@@ -60,9 +64,9 @@ const PollutionTimeline =
               picker='month'
               locale={locale}
               allowClear={false}
-              value={dayjs(props.year)}
+              value={dayjs(props.time)}
               disabledDate={disabledDate}
-              onChange={(date) => date ? props.onChangeYear(date.valueOf()) : null}
+              onChange={(date) => date ? props.onChangeTime(date.valueOf()) : null}
             />
           </Col>
         </Row>

@@ -22,7 +22,7 @@ const EmptyChart: React.FC<ChartProps.EmptyChartProps> = (props) => {
   return (
     <div
       ref={dropRef}
-      className=' w-[28vw] h-[38vh] bg-slate-400 text-center select-none'>
+      className=' w-[28vw] h-[30vh] bg-slate-400 text-center select-none shrink-0'>
       {
         isOver ?
           <>

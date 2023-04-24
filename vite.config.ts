@@ -16,7 +16,7 @@ export default defineConfig({
     proxy: {
       '/charts/': {
         changeOrigin: true,
-        target: 'http://192.168.210.93:5000/'
+        target: 'http://192.168.43.24:5000/'
       }
     }
   }

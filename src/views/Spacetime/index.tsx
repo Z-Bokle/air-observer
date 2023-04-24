@@ -5,7 +5,7 @@ import PollutionTimeline from '../../components/PollutionTimeline'
 import PollutionSelectCard from '../../components/PollutionSelectCard'
 import InteractiveMap from '../../components/InteractiveMap'
 import RegionSelectCard from '../../components/RegionSelectCard'
-import { ChartList } from '../../components/charts/type'
+import { Chart, ChartList } from '../../components/charts/type'
 import ChartContainer from '../../components/charts/ChartContainer'
 import { Region } from '../../components/type'
 import dayjs from 'dayjs'
@@ -55,7 +55,7 @@ export default function Spacetime() {
     <EmptyChart index={3} key={3} />])
 
   const [pollutionSelection, setPollutionSelection] = useState('AQI')
-  const [currentYear, setCurrentYear] = useState(dayjs('2013-01').valueOf())
+  const [currentTime, setCurrentTime] = useState(dayjs('2013-01').valueOf())
 
   const [region, setRegion] = useState<Region>({
     country: 100000,
@@ -69,20 +69,31 @@ export default function Spacetime() {
   const chartsManageRef = useRef(null)
   const timelineRef = useRef(null)
 
-  const handleDrop = (dropIndex: number, chart: ReactNode) => {
+  const handleDrop = (dropIndex: number, chart: Chart) => {
     const newCharts = cloneDeep(charts)
     if (chart) newCharts[dropIndex] = chart
+    setCharts(newCharts)
+  }
+
+  const handleDelChart = (index: number) => {
+    const newCharts = cloneDeep(charts)
+    newCharts[index] = <EmptyChart index={index} key={index} />
     setCharts(newCharts)
   }
 
   return (
     <>
       <div className='flex justify-around'>
-        <div>
-          <ChartContainer charts={charts} ref={chartContainerRef} />
+        <div className='h-full py-8'>
+          <ChartContainer
+            charts={charts}
+            ref={chartContainerRef}
+            onDel={handleDelChart}
+            time={currentTime}
+            region={region} />
 
-          <div style={{ height: 100, padding: 10, width: '100%' }}>
-            <PollutionTimeline year={currentYear} onChangeYear={(year) => setCurrentYear(year)} ref={timelineRef} />
+          <div className='w-full h-[100px] p-[10px]'>
+            <PollutionTimeline time={currentTime} onChangeTime={(time) => setCurrentTime(time)} ref={timelineRef} />
           </div>
         </div>
 
@@ -90,7 +101,7 @@ export default function Spacetime() {
           <Space direction='vertical'>
             <InteractiveMap region={region} onChangeRegion={(region) => { setRegion(region) }} ref={interactiveMapRef} />
             <RegionSelectCard region={region} onChangeRegion={(region) => { setRegion(region) }} ref={regionSelectRef} />
-            <PollutionSelectCard selection={pollutionSelection} onSelect={(value) => setPollutionSelection(value)} />
+            {/* <PollutionSelectCard selection={pollutionSelection} onSelect={(value) => setPollutionSelection(value)} /> */}
             <ChartsManageCard ref={chartsManageRef} onDrop={handleDrop} />
             <HelpCard onStartTour={() => setTourOpen(true)} />
           </Space>
