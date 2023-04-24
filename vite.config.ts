@@ -16,7 +16,14 @@ export default defineConfig({
     proxy: {
       '/charts/': {
         changeOrigin: true,
-        target: 'http://192.168.43.24:5000/'
+        target: 'http://192.168.210.93:5000/'
+      },
+      '/aliyunRegion/': {
+        changeOrigin: true,
+        target: 'https://gw.alipayobjects.com/os/alisis/geo-data-v0.1.1/administrative-data/area-list.json',
+        headers: {
+          referer: ''
+        }
       }
     }
   }
