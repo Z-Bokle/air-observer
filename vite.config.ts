@@ -28,7 +28,11 @@ export default defineConfig({
       '/data/': {
         changeOrigin: true,
         target: 'http://192.168.192.93:5000/'
-      }
+      },
+      // '/pic': {
+      //   changeOrigin: true,
+      //   target: 'http://192.168.192.93:5000/'
+      // }
     }
   }
 })

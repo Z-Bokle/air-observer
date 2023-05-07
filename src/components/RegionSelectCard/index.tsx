@@ -15,8 +15,6 @@ const RegionSelectCard =
         .then((data) => data ? setCodeList(data) : null)
     }, [])
 
-    console.log(codeList)
-
     return (
       <Card title="区域选择" ref={ref}>
         <Space direction='vertical' wrap>

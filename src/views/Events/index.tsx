@@ -32,7 +32,7 @@ export default function Event() {
 
   const [selectedDate, setSelectedDate] = useState<number>()
 
-  const areaData = (data?.[selectedData].area_data as Array<any>)
+  const areaData = (data?.[selectedData ?? 0].area_data as Array<any>)
 
   const dailyData = areaData?.find((item) => dayjs(item.list[0].date).valueOf() === selectedDate)
 
@@ -46,21 +46,22 @@ export default function Event() {
   }, [areaData])
 
   useEffect(() => {
-    setSelectedDate(dayjs(data?.[selectedData].start_time).valueOf())
+    setSelectedDate(dayjs(data?.[selectedData ?? 0].start_time).valueOf())
   }, [selectedData, data])
-
-  console.log(processData(areaData))
 
   return (
     <div className='flex justify-evenly'>
       <div className='w-[35vw] h-96 '>
-        <WindMap picUrl='' />
+        <WindMap picUrl={dailyData?.url} />
         <Slider 
-          min={dayjs(data?.[selectedData].start_time).valueOf()} 
-          max={dayjs(data?.[selectedData].end_time).valueOf()} 
+          min={dayjs(data?.[selectedData ?? 0].start_time).valueOf()} 
+          max={dayjs(data?.[selectedData ?? 0].end_time).valueOf()} 
           step={dayjs().valueOf() - dayjs().subtract(1, 'day').valueOf()} 
           value={selectedDate}
-          onChange={(val) => setSelectedDate(val)}
+          onChange={(val) => {
+            setSelectedDate(val)
+            eventCenter.emit('setCenter', { center: data?.[selectedData ?? 0].center })
+          }}
           tooltip={{formatter: (value) => dayjs(value).format('YYYY.MM.DD')}}
           included={false}
           marks={marks}
@@ -77,7 +78,7 @@ export default function Event() {
               value={selectedData} 
               onChange={(val) => {
                 setSelectedData(val)
-                eventCenter.emit('setCenter', { center: data?.[selectedData].center })
+                eventCenter.emit('setCenter', { center: data?.[selectedData ?? 0].center })
               }}
               options={data?.map((item, index) => ({label: item.typhoon, value: index}))} 
               placeholder='请选择要查看的特殊气象'/>)}
@@ -89,7 +90,7 @@ export default function Event() {
                 台风
               </Descriptions.Item>
               <Descriptions.Item label='起止时间'>
-                {`${dayjs(data?.[selectedData].start_time).format('YYYY.MM.DD')}-${dayjs(data?.[selectedData ?? 0].end_time).format('YYYY.MM.DD')}`}
+                {`${dayjs(data?.[selectedData ?? 0].start_time).format('YYYY.MM.DD')}-${dayjs(data?.[selectedData ?? 0].end_time).format('YYYY.MM.DD')}`}
               </Descriptions.Item>
               <Descriptions.Item label='影响范围'>
                 {Array.from(new Set(areaData?.[0].list.map((item: any) => item.area))).join(', ')}
@@ -98,9 +99,9 @@ export default function Event() {
           </ProCard>
           <ProCard tabs={{ type: 'card' }}>
               <ProCard.TabPane key='tab1' tab='受影响省份气象信息'>
-                <ProCard split='horizontal' headerBordered title={titleStyled('受影响省份气象信息')}>
-                  {dailyData?.list.map((item: any) => (
-                    <ProCard title={titleStyled(item.area)} hoverable>
+                <ProCard split='horizontal' headerBordered title={titleStyled('受影响省份气象信息')} className='h-[700px] overflow-y-auto'>
+                  {dailyData?.list.map((item: any, index: number) => (
+                    <ProCard title={titleStyled(item.area)} key={index} hoverable>
                       <div className='w-full flex justify-evenly'>
                         <RoundChart value={item.temp - 273.15} max={40} min={0} formatter={(value) => `${value.toFixed(2)}℃`} color='#78CC00' />
                         <RoundChart value={item.pa} max={120000} min={0} formatter={(value) => `${value.toFixed(1)}Pa`} color='#1890FF' />                  
@@ -112,10 +113,10 @@ export default function Event() {
               </ProCard.TabPane>
               <ProCard.TabPane key='tab2' tab='天气变化趋势'>
                 <ProCard title={titleStyled('天气变化趋势')} split='vertical' headerBordered>
-                  <ProCard hoverable>
+                  <ProCard title={titleStyled('气温')} hoverable>
                     <AdvancedLineChart data={processData(areaData)} x='date' y='temp' group='area' />
                   </ProCard>
-                  <ProCard hoverable>
+                  <ProCard title={titleStyled('气压')} hoverable>
                     <AdvancedLineChart data={processData(areaData)} x='date' y='pa' group='area' />
                   </ProCard>
                 </ProCard>

@@ -1,3 +1,3 @@
 declare interface WindMapProps {
-  picUrl: string
+  picUrl?: string
 }
