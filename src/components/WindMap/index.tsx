@@ -1,8 +1,11 @@
 import { Scene, WindLayer, GaodeMap } from '@antv/l7'
-import { useLayoutEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
+import { eventCenter } from '../../utils/eventBus';
 
 
-const WindMap = () => {
+const WindMap:React.FC<WindMapProps> = (props) => {
+
+  const {picUrl} = props
 
   useLayoutEffect(() => {
     const scene = new Scene({
@@ -13,13 +16,19 @@ const WindMap = () => {
         zoom: 2,
         token: '526f814f66cc435eed82135e34d11b85'
       })
-    });
+    })
+
+    eventCenter.on('setCenter', ({center} : {center: [number, number]}) => {
+      if(scene) {
+        scene.setZoomAndCenter(6, center)
+      }
+    })
 
     scene.on('loaded', () => {
       const layer = new WindLayer({});
       layer
         .source(
-          '/pic.png',
+          picUrl,
           {
             parser: {
               type: 'image',
@@ -44,8 +53,8 @@ const WindMap = () => {
             0.8: '#2171b5',
             1.0: '#084594'
           }
-        });
-      scene.addLayer(layer);
+        })
+      scene.addLayer(layer)
     })
   }, [])
 

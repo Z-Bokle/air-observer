@@ -16,7 +16,7 @@ export default defineConfig({
     proxy: {
       '/charts/': {
         changeOrigin: true,
-        target: 'http://192.168.210.93:5000/'
+        target: 'http://192.168.192.93:5000/'
       },
       '/aliyunRegion/': {
         changeOrigin: true,
@@ -24,6 +24,10 @@ export default defineConfig({
         headers: {
           referer: ''
         }
+      },
+      '/data/': {
+        changeOrigin: true,
+        target: 'http://192.168.192.93:5000/'
       }
     }
   }

@@ -6,7 +6,6 @@ import { PollutionChartData } from './type'
 import { joinParams, jsonGet } from '../../../utils/request'
 import { useDrag } from 'react-dnd'
 import { Charts as ChartsSymbol } from '../../../symbols'
-import { dragEvents } from '../../../utils/eventBus'
 
 const PollutionChart: React.FC<ChartProps.PollutionChartProps> = (props) => {
 

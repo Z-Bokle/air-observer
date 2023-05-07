@@ -54,7 +54,6 @@ export default function Spacetime() {
     <EmptyChart index={2} key={2} />,
     <EmptyChart index={3} key={3} />])
 
-  const [pollutionSelection, setPollutionSelection] = useState('AQI')
   const [currentTime, setCurrentTime] = useState(dayjs('2013-01').valueOf())
 
   const [region, setRegion] = useState<Region>({
