@@ -83,7 +83,8 @@ export default function Event() {
               options={data?.map((item, index) => ({label: item.typhoon, value: index}))} 
               placeholder='请选择要查看的特殊气象'/>)}
           bordered
-          headerBordered>
+          headerBordered
+        >
           <ProCard>
             <Descriptions>
               <Descriptions.Item label='类型'>
@@ -114,7 +115,7 @@ export default function Event() {
               <ProCard.TabPane key='tab2' tab='天气变化趋势'>
                 <ProCard title={titleStyled('天气变化趋势')} split='vertical' headerBordered>
                   <ProCard title={titleStyled('气温')} hoverable>
-                    <AdvancedLineChart data={processData(areaData)} x='date' y='temp' group='area' />
+                    <AdvancedLineChart data={processData(areaData).map((data) => Object.assign({}, data, {temp: parseFloat((data.temp - 273.15).toFixed(1))}))} x='date' y='temp' group='area' />
                   </ProCard>
                   <ProCard title={titleStyled('气压')} hoverable>
                     <AdvancedLineChart data={processData(areaData)} x='date' y='pa' group='area' />
