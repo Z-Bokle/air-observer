@@ -25,10 +25,13 @@ const ChartsManageCard =
           <Space wrap>
             <RelationChart
               height={300}
-              title='111'
+              title='地区污染物关系图'
               className=''
               onDragging={(isDragging) => setOpenDrawer(!isDragging)}
               onDrop={props.onDrop}
+              adcode={110000}
+              year={2013}
+              month={1}
             />
 
             <PollutionChart

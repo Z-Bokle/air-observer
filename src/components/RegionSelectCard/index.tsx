@@ -10,9 +10,8 @@ const RegionSelectCard =
     // 获取地区编号列表
     const [codeList, setCodeList] = useState<CodeRecord[]>([])
     useEffect(() => {
-      fetch('https://gw.alipayobjects.com/os/alisis/geo-data-v0.1.1/administrative-data/area-list.json')
-        .then((res) => res.json())
-        .then((data) => data ? setCodeList(data) : null)
+      jsonGet<any>('/data/area_list')
+      .then((data) => setCodeList(data))
     }, [])
 
     return (

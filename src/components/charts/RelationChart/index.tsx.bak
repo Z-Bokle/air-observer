@@ -41,7 +41,7 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
   useEffect(() => {
     props.onDragging?.(isDragging && !(props.disableDrag))
   }, [isDragging])
-
+  
   const [data, setData] = useState<any[]>([])
 
   useEffect(() => {
@@ -57,20 +57,29 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
     }
   }, [props.year, props.month, props.adcode])
 
+  const source = data.map((arr) => {
+    return {
+      namx: arr[0],
+      namey: arr[1],
+      value: arr[2],
+    }
+  })
 
   const scale = {
-    corr1: {
-      type: 'cat',
+    namex: {
+      type: 'corr',
       values: ['PM2.5','PM10', 'SO2', 'NO2', 'CO', 'O3'],
     },
-    corr2: {
-      type: 'cat',
+    namey: {
+      type: 'corr',
       values: ['PM2.5','PM10', 'SO2', 'NO2', 'CO', 'O3'],
     },
     value: {
       nice: true,
     }
   }
+
+  console.log(data)
 
   return (
     <Card
@@ -80,14 +89,14 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
       <Chart
         scale={scale}
         height={props.height}
-        data={data}
+        data={source}
         autoFit
         placeholder
         pure
       >
 
         <Axis
-          name={'corr1'}
+          name={'namex'}
           tickLine={null}
           grid={{
             alignTick: false,
@@ -101,7 +110,7 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
           }}
         />
         <Axis
-          name={'corr2'}
+          name={'namey'}
           title={null}
           grid={{
             alignTick: false,
@@ -115,8 +124,8 @@ export const RelationChart: React.FC<ChartProps.RelationChartProps> = (props) =>
           }}
         />
         <Tooltip shared showMarkers={false} />
-        <Polygon
-          position={'corr1*corr2'}
+         <Polygon
+          position={'namex*namey'}
           color={['value', '#BAE7FF-#1890FF-#0050B3']}
           label={['value', {
             offset: -2,

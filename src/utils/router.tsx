@@ -7,7 +7,6 @@ import Error from '../views/Error'
 import Trend from '../views/Trend'
 import Events from '../views/Events'
 import Pollution from '../views/Pollution'
-import TestComp from '../views/TestComp'
 
 const router = createBrowserRouter([
   // 在Main中可以实现鉴权
@@ -32,10 +31,6 @@ const router = createBrowserRouter([
         handle: { title: '特殊气象事件分析' }
       }
     ]
-  },
-  {
-    path: '/testcomp',
-    element: <TestComp />
   }
 ])
 
